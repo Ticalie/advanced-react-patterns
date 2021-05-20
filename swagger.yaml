@@ -1,0 +1,121 @@
+---
+swagger: "2.0"
+info:
+  title: wat
+  version: "1.0"
+  description: This is cool 2 is a simple API allowing consumers to view polls and
+    vote in them.
+  license:
+    name: MIT
+    url: https://github.com/apiaryio/polls-api/blob/master/LICENSE
+host: polls.apiblueprint.org
+basePath: /
+schemes:
+- https
+consumes:
+- application/json
+produces:
+- application/json
+paths:
+  /questions:
+    get:
+      responses:
+        "200":
+          description: Successful Response
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Question'
+          examples:
+            application/json:
+            - question: Favourite programming language?
+              published_at: 2015-08-05T08:40:51.620Z
+              choices:
+              - choice: Swift
+                votes: 2048
+              - choice: Python
+                votes: 1024
+              - choice: Objective-C
+                votes: 512
+              - choice: Ruby
+                votes: 256
+      summary: List All Questions
+    post:
+      parameters:
+      - name: body
+        schema:
+          $ref: '#/definitions/QuestionRequest'
+        in: body
+        required: true
+      responses:
+        "201":
+          description: ""
+          schema:
+            $ref: '#/definitions/Question'
+          examples:
+            application/json:
+              question: Favourite programming language?
+              published_at: 2015-08-05T08:40:51.620Z
+              choices:
+              - choice: Swift
+                votes: 0
+              - choice: Python
+                votes: 0
+              - choice: Objective-C
+                votes: 0
+              - choice: Ruby
+                votes: 0
+      summary: Create a New Question
+      description: You may create your own question using this action. It takes a
+        JSON object containing a question and a collection of answers in the form
+        of choices.
+    x-summary: Questions Collection
+definitions:
+  Question:
+    title: Question
+    required:
+    - question
+    - published_at
+    - choices
+    type: object
+    properties:
+      question:
+        type: string
+      published_at:
+        type: string
+      choices:
+        type: array
+        items:
+          $ref: '#/definitions/Choice'
+  Choice:
+    title: Choice
+    required:
+    - votes
+    - choice
+    type: object
+    properties:
+      votes:
+        format: int32
+        type: integer
+      choice:
+        type: string
+  QuestionRequest:
+    title: Question Request
+    required:
+    - question
+    - choices
+    type: object
+    properties:
+      question:
+        type: string
+      choices:
+        type: array
+        items:
+          type: string
+    example:
+      question: Favourite programming language?
+      choices:
+      - Swift
+      - Python
+      - Objective-C
+      - Ruby
